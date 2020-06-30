@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1, 
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "ng-auth-implicit-flow": {
@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ng-auth-implicit-flow"
+    }
+  },
+  "defaultProject": "ng-auth-implicit-flow",
+  "cli": {
+    "analytics": false
+  }
 }
