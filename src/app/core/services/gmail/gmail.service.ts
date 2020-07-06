@@ -62,9 +62,7 @@ export class GmailService {
             );
           });
           filtered = this.formatMessageResponse(filtered, 'name');
-          /*headers.find((item) => {
-            return item.name === 'From';
-          });*/
+
           console.log('res: ', {
             ...filtered,
             id: res.id,
@@ -75,19 +73,20 @@ export class GmailService {
             id: res.id,
             detail: res.snippet
           };
-          /*
-          return {
-            id: res.id,
-            snippet: res.snippet,
-            subject: '',
-            from: ''
-          };*/
         })
       );
   }
 
   getProfile(userId: string, authtoken: string) {
     return this.http.get(`${API_URL}/${userId}/profile`, {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${authtoken}`
+      })
+    });
+  }
+
+  getPhoto(authtoken: string) {
+    return this.http.get(`https://www.googleapis.com/oauth2/v2/userinfo`, {
       headers: new HttpHeaders({
         Authorization: `Bearer ${authtoken}`
       })

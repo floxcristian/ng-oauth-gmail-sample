@@ -1,3 +1,12 @@
+<button (click)="getPhoto()">Get Photo</button>
+<hr>
+<div *ngIf="profile">
+  <ul>
+    <li>Email: {{profile.emailAddress}}</li>
+    <li>Messages Total: {{profile.messagesTotal}}</li>
+  </ul>
+</div>
+<hr>
 <ul>
   <li *ngFor="let message of messages">
     <b>{{message.from}} - {{message.subject}}</b>: {{ message.detail }}
