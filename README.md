@@ -1,27 +1,20 @@
-# NgAuthImplicitFlow
+Esta app usa la dependencia angular-auth-oidc-client para el soporte de OIDC
+Authorization Code Flow with PKCE.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.7.
+La aplicación Angular carga las configuraciones desde un archivo json de
+configuración.
 
-## Development server
+Response_type se establece en "code". Esto define el flujo de OpenID Connect
+(OIDC).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Siempre se usa PKCE, ya que este es un cliente público que no puede guardar un
+secreto.
 
-## Code scaffolding
+Las otras configuraciones deben coincidir con las configuraciones del cliente
+OpenID Connect en el servidor.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# Dudas
 
-## Build
+- **¿Es necesario crypto-js?**
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+- **¿El status y code_verifier se debe almacenar en localStorage?**

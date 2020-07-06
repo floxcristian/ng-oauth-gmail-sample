@@ -1,0 +1,8 @@
+<button (click)="getMessages()">Get messages</button>
+<button (click)="getProfile()">Get profile</button>
+
+<ul>
+  <li *ngFor="let message of messages">
+    {{ message.snippet }}
+  </li>
+</ul>
