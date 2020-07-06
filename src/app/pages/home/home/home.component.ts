@@ -12,14 +12,16 @@ import { GmailService } from '../../../core/services/gmail/gmail.service';
 })
 export class HomeComponent implements OnInit {
   authtoken: any;
-  userId: string = 'cristianflores.ee@gmail.com';
+  userId: string = 'me';
   messages: Array<any>;
   constructor(
     private oidcSecurityService: OidcSecurityService,
     private _gmailSrv: GmailService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getMessages();
+  }
 
   logout() {
     this.oidcSecurityService.logoff();

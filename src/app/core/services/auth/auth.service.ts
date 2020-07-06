@@ -37,7 +37,7 @@ export class AuthService {
 
   logout() {
     this.oidcSecurityService.logoff();
-    this.router.navigate(['/login']);
+    this.router.navigate(['auth/login']);
   }
 
   /*

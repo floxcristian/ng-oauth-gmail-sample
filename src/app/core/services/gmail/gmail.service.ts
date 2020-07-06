@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 // rxjs
 import { forkJoin, Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 // Models
 import { MessagesList } from 'src/app/core/models/messages-list.model';
 // Constants
@@ -43,11 +43,47 @@ export class GmailService {
   }
 
   getMessageById(userId: string, authToken: string, id: string) {
-    return this.http.get(`${API_URL}/${userId}/messages/${id}`, {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${authToken}`
+    return this.http
+      .get(`${API_URL}/${userId}/messages/${id}`, {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${authToken}`
+        })
       })
-    });
+      .pipe(
+        map((res: any) => {
+          console.log('message: ', res);
+
+          let headers = res.payload.headers;
+          let filtered = headers.filter((item) => {
+            return (
+              item.name === 'From' ||
+              item.name === 'Subject' ||
+              item.name === 'Date'
+            );
+          });
+          filtered = this.formatMessageResponse(filtered, 'name');
+          /*headers.find((item) => {
+            return item.name === 'From';
+          });*/
+          console.log('res: ', {
+            ...filtered,
+            id: res.id,
+            detail: res.snippet
+          });
+          return {
+            ...filtered,
+            id: res.id,
+            detail: res.snippet
+          };
+          /*
+          return {
+            id: res.id,
+            snippet: res.snippet,
+            subject: '',
+            from: ''
+          };*/
+        })
+      );
   }
 
   getProfile(userId: string, authtoken: string) {
@@ -56,6 +92,15 @@ export class GmailService {
         Authorization: `Bearer ${authtoken}`
       })
     });
+  }
+
+  formatMessageResponse(array, key) {
+    return array.reduce((obj, item) => {
+      return {
+        ...obj,
+        [item[key].toLowerCase()]: item.value
+      };
+    }, {});
   }
 
   /*
