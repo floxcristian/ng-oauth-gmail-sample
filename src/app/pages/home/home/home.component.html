@@ -1,14 +1,17 @@
-<button (click)="getPhoto()">Get Photo</button>
-<hr>
+<button (click)="getPublicPhoto()">Get Photo</button>
+<hr />
+<img [src]="userInfo?.picture" alt="" />
 <div *ngIf="profile">
   <ul>
-    <li>Email: {{profile.emailAddress}}</li>
-    <li>Messages Total: {{profile.messagesTotal}}</li>
+    <li>Email: {{ profile.emailAddress }}</li>
+    <li>Nombre: {{ userInfo?.name }}</li>
+    <li>Messages Total: {{ profile.messagesTotal }}</li>
   </ul>
 </div>
-<hr>
+<hr />
 <ul>
   <li *ngFor="let message of messages">
-    <b>{{message.from}} - {{message.subject}}</b>: {{ message.detail }}
+    <b>{{ message.from }} - {{ message.subject }}</b>
+    : {{ message.detail }}
   </li>
 </ul>

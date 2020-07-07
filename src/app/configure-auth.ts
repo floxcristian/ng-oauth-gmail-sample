@@ -15,7 +15,7 @@ export const configureAuth = (oidcConfigService: OidcConfigService) => {
         clientId:
           '88458454237-h6fagpt47caqelj9ueukaadbvqrer6s5.apps.googleusercontent.com',
         scope:
-          'openid profile email https://www.googleapis.com/auth/gmail.readonly',
+          'openid profile email https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/contacts',
         responseType: 'id_token token',
         silentRenew: true, // cada 4 sec se compruba
         silentRenewUrl: `${window.location.origin}/silent-renew.html`,

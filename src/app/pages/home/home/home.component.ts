@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   userId: string = 'me';
   messages: Array<any>;
   profile;
+  userInfo;
   constructor(
     private oidcSecurityService: OidcSecurityService,
     private _gmailSrv: GmailService
@@ -48,7 +49,15 @@ export class HomeComponent implements OnInit {
 
   getPhoto() {
     this.authtoken = localStorage.getItem('accesstoken');
-    this._gmailSrv.getPhoto(this.authtoken).subscribe((res) => {
+    this._gmailSrv.getUserInfo(this.authtoken).subscribe((res) => {
+      this.userInfo = res;
+      console.log('photo: ', res);
+    });
+  }
+
+  getPublicPhoto() {
+    this.authtoken = localStorage.getItem('accesstoken');
+    this._gmailSrv.getPublicPhoto(this.authtoken).subscribe((res) => {
       console.log('photo: ', res);
     });
   }

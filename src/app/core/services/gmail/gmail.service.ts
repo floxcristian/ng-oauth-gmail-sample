@@ -1,4 +1,9 @@
+// Obtener account_id: https://www.googleapis.com/admin/directory/v1/users/liz@example.com (https://developers.google.com/admin-sdk/directory/v1/guides/manage-users)
+// Google Scope: https://developers.google.com/identity/protocols/oauth2/scopes#openid_connect
 // https://developers.google.com/gmail/api/v1/reference/users/messages/list#javascript
+//https://stackoverflow.com/questions/58605719/how-to-get-profile-info-google-photo-library-api
+// https://github.com/HaithemMosbahi/ngx-avatar/issues/51
+//https://stackoverflow.com/questions/46349746/is-there-any-way-that-i-can-retrieve-account-id-from-google-contact-api-v3-to-ma
 // Angular
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -11,6 +16,8 @@ import { switchMap, map } from 'rxjs/operators';
 import { MessagesList } from 'src/app/core/models/messages-list.model';
 // Constants
 const API_URL: string = environment.GAPI_URL;
+const AVATAR_DEFAULT =
+  'http://ssl.gstatic.com/ui/v1/icons/mail/profile_mask2.png';
 
 @Injectable({
   providedIn: 'root'
@@ -85,12 +92,24 @@ export class GmailService {
     });
   }
 
-  getPhoto(authtoken: string) {
-    return this.http.get(`https://www.googleapis.com/oauth2/v2/userinfo`, {
+  // este sirve
+  getUserInfo(authtoken: string) {
+    return this.http.get(`https://www.googleapis.com//userinfo/v2/me`, {
       headers: new HttpHeaders({
         Authorization: `Bearer ${authtoken}`
       })
     });
+  }
+
+  getPublicPhoto(authtoken: string) {
+    return this.http.get(
+      `https://people.googleapis.com/v1/people/102664400979121925528?personFields=names%2Cphotos`,
+      {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${authtoken}`
+        })
+      }
+    );
   }
 
   formatMessageResponse(array, key) {
