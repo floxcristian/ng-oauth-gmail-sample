@@ -16,8 +16,7 @@ import { switchMap, map } from 'rxjs/operators';
 import { MessagesList } from 'src/app/core/models/messages-list.model';
 // Constants
 const API_URL: string = environment.GAPI_URL;
-const AVATAR_DEFAULT =
-  'http://ssl.gstatic.com/ui/v1/icons/mail/profile_mask2.png';
+import { MAT_COLORS } from 'src/app/config/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -29,27 +28,32 @@ export class GmailService {
   getMessages(
     userId: string,
     authtoken: string,
-    limit: number = 5
+    limit: number = 10
   ): Observable<any> {
     return this.http
-      .get<MessagesList>(`${API_URL}/${userId}/messages?maxResults=${limit}`, {
-        headers: new HttpHeaders({
-          Authorization: `Bearer ${authtoken}`
-        })
-      })
+      .get<MessagesList>(
+        `${API_URL}/${userId}/messages?maxResults=${limit}&labelIds=UNREAD&labelIds=INBOX&q=category:primary`,
+        {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${authtoken}`
+          })
+        }
+      )
       .pipe(
         switchMap((res) => {
           let requests = [];
           const results = res.messages;
-          results.forEach((item) => {
-            requests.push(this.getMessageById(userId, authtoken, item.id));
+          results.forEach((item, index) => {
+            requests.push(
+              this.getMessageById(userId, authtoken, item.id, index)
+            );
           });
           return forkJoin(requests);
         })
       );
   }
 
-  getMessageById(userId: string, authToken: string, id: string) {
+  getMessageById(userId: string, authToken: string, id: string, index: number) {
     return this.http
       .get(`${API_URL}/${userId}/messages/${id}`, {
         headers: new HttpHeaders({
@@ -58,8 +62,6 @@ export class GmailService {
       })
       .pipe(
         map((res: any) => {
-          console.log('message: ', res);
-
           let headers = res.payload.headers;
           let filtered = headers.filter((item) => {
             return (
@@ -68,12 +70,12 @@ export class GmailService {
               item.name === 'Date'
             );
           });
-          filtered = this.formatMessageResponse(filtered, 'name');
+          filtered = this.formatMessageResponse(filtered, 'name', index);
 
           console.log('res: ', {
             ...filtered,
             id: res.id,
-            detail: res.snippet
+            detail: res.snippet + '...'
           });
           return {
             ...filtered,
@@ -112,13 +114,22 @@ export class GmailService {
     );
   }
 
-  formatMessageResponse(array, key) {
-    return array.reduce((obj, item) => {
+  formatMessageResponse(array, key, index) {
+    let res = array.reduce((obj, item) => {
       return {
         ...obj,
         [item[key].toLowerCase()]: item.value
       };
     }, {});
+
+    const nameAndEmail = this.getNameAndEmail(res.from);
+    const imageParams = this.getImageParams(nameAndEmail.name, index);
+
+    return {
+      ...res,
+      ...nameAndEmail,
+      image_params: imageParams
+    };
   }
 
   /*
@@ -130,4 +141,34 @@ export class GmailService {
         });
     }
    */
+
+  getNameAndEmail(value: string) {
+    const temp_index = value.indexOf('<');
+    let name = value.substring(0, temp_index - 1);
+    name = name.replace(/\"/g, '');
+
+    let email = value.substring(temp_index + 1, value.length);
+    email = email.replace(/>/g, '');
+
+    return {
+      name,
+      email
+    };
+  }
+
+  getImageParams(name: string, index: number = 0) {
+    console.log('INDEX: ', index);
+    name = name.replace(/\|/g, ''); // quita todos los '|'
+    name = name.replace(/\s{2,}/g, ' '); // quita cuando halla mas de un espacio
+    let names = name.split(' ', 2);
+    const length = names.length;
+
+    let letters;
+    if (length === 1) letters = names[0].substring(0, 1);
+    else if (length === 2)
+      letters = names[0].substring(0, 1) + names[1].substring(0, 1);
+    else letters = 'U';
+
+    return `&name=${letters}&length=${length}&background=${MAT_COLORS[index]}`;
+  }
 }

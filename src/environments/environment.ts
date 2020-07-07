@@ -4,6 +4,8 @@
 
 export const environment = {
   production: false,
+  AVATAR_API:
+    'https://ui-avatars.com/api/?rounded=true&bold=true&color=ffffff&format=svg',
   GAPI_URL: 'https://www.googleapis.com/gmail/v1/users',
   oauthClientId:
     '88458454237-h6fagpt47caqelj9ueukaadbvqrer6s5.apps.googleusercontent.com',

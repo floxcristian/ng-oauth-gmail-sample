@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 // Services
 import { GmailService } from '../../../core/services/gmail/gmail.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,7 @@ export class HomeComponent implements OnInit {
   messages: Array<any>;
   profile;
   userInfo;
+  AVATAR_API = environment.AVATAR_API;
   constructor(
     private oidcSecurityService: OidcSecurityService,
     private _gmailSrv: GmailService
