@@ -10,12 +10,21 @@
 </div>
 <hr />
 <ul>
-  <li *ngFor="let message of messages" style="margin-bottom:1rem">
-    <img [src]="AVATAR_API + message.image_params" alt="">
-    <b>{{ message.name }}</b><br>
-    <b>{{ message.subject }}</b><br>
-    <p [innerHtml]="message.detail" style="width: 70%;white-space:nowrap; text-overflow: ellipsis; overflow: hidden;">
-    </p>
-    <span style="font-style:italic">{{ message.date}}</span>
+  <li *ngFor="let message of messages" style="margin-bottom: 1rem;">
+    <img [src]="AVATAR_API + message.image_params" alt="" />
+    <b>{{ message.name }}</b
+    ><br />
+    <b>{{ message.subject }}</b
+    ><br />
+    <p
+      [innerHtml]="message.detail"
+      style="
+        width: 70%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      "
+    ></p>
+    <span style="font-style: italic;">{{ message.date | timeAgo }}</span>
   </li>
 </ul>

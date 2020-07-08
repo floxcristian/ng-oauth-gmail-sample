@@ -8,6 +8,7 @@ import { MaterialModule } from './material.module';
 // Layout
 import { HeaderComponent } from './layout/header/header.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { TimeAgoPipe } from './pipes/time-ago/time-ago.pipe';
 
 const MODULES = [
   CommonModule,
@@ -17,10 +18,11 @@ const MODULES = [
 ];
 
 const COMPONENTS = [HeaderComponent, MainLayoutComponent];
+const PIPES = [TimeAgoPipe];
 
 @NgModule({
-  declarations: [...COMPONENTS],
+  declarations: [...COMPONENTS, ...PIPES],
   imports: [RouterModule, ...MODULES],
-  exports: [MODULES, COMPONENTS]
+  exports: [MODULES, COMPONENTS, PIPES]
 })
 export class SharedModule {}

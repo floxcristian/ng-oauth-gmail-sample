@@ -7,11 +7,11 @@
 // Angular
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-// Environment
-import { environment } from 'src/environments/environment';
 // rxjs
 import { forkJoin, Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
+// Environment
+import { environment } from 'src/environments/environment';
 // Models
 import { MessagesList } from 'src/app/core/models/messages-list.model';
 // Constants
@@ -24,7 +24,6 @@ import { MAT_COLORS } from 'src/app/config/constants';
 export class GmailService {
   constructor(private http: HttpClient) {}
 
-  // authtoken as parameter only for demo purpose , better use a UserService to get the token
   getMessages(
     userId: string,
     authtoken: string,
@@ -48,7 +47,7 @@ export class GmailService {
               this.getMessageById(userId, authtoken, item.id, index)
             );
           });
-          return forkJoin(requests);
+          return forkJoin(requests); // [{ message, subject}, { message, subject}, { message, subject}, { message, subject}]
         })
       );
   }
@@ -72,11 +71,8 @@ export class GmailService {
           });
           filtered = this.formatMessageResponse(filtered, 'name', index);
 
-          console.log('res: ', {
-            ...filtered,
-            id: res.id,
-            detail: res.snippet + '...'
-          });
+          //filtered.date = new Date(filtered.date);
+
           return {
             ...filtered,
             id: res.id,
@@ -156,17 +152,15 @@ export class GmailService {
     };
   }
 
-  getImageParams(name: string, index: number = 0) {
-    console.log('INDEX: ', index);
-    name = name.replace(/\|/g, ''); // quita todos los '|'
-    name = name.replace(/\s{2,}/g, ' '); // quita cuando halla mas de un espacio
-    let names = name.split(' ', 2);
+  private getImageParams(name: string, index: number) {
+    name = name.replace(/\|/g, '');
+    name = name.replace(/\s{2,}/g, ' ');
+    const names = name.split(' ', 2);
     const length = names.length;
 
     let letters;
-    if (length === 1) letters = names[0].substring(0, 1);
-    else if (length === 2)
-      letters = names[0].substring(0, 1) + names[1].substring(0, 1);
+    if (length === 1) letters = names[0];
+    else if (length === 2) letters = `${names[0]} ${names[1]}`;
     else letters = 'U';
 
     return `&name=${letters}&length=${length}&background=${MAT_COLORS[index]}`;

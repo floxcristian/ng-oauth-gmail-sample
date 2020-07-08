@@ -6,7 +6,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 // Services
 import { GmailService } from '../../../core/services/gmail/gmail.service';
 import { environment } from 'src/environments/environment';
-
+const DAYS = ['lun', 'mar', 'mie', 'jue', 'vie', 'sáb', 'dom'];
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
   profile;
   userInfo;
   AVATAR_API = environment.AVATAR_API;
+  temp;
   constructor(
     private oidcSecurityService: OidcSecurityService,
     private _gmailSrv: GmailService
@@ -35,9 +36,11 @@ export class HomeComponent implements OnInit {
 
   getMessages() {
     this.authtoken = localStorage.getItem('accesstoken');
-    this._gmailSrv.getMessages(this.userId, this.authtoken).subscribe((res) => {
-      this.messages = res;
-    });
+    this._gmailSrv
+      .getMessages(this.userId, this.authtoken, 100)
+      .subscribe((res) => {
+        this.messages = res;
+      });
   }
 
   getProfile() {
