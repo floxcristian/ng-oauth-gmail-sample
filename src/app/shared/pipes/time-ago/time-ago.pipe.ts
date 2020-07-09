@@ -1,3 +1,7 @@
+// source: https://stackoverflow.com/questions/3177836/how-to-format-time-since-xxx-e-g-4-minutes-ago-similar-to-stack-exchange-site?fbclid=IwAR1Pt2EYtc8rkRdzY49F8Rf6QkNIAFZQmUIJD0ovcGLDO1YJZbshVRQkIRw
+// TODO: esto se puede mejorar.
+
+// Angular
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -34,8 +38,7 @@ export class TimeAgoPipe implements PipeTransform {
       }.`;
     }
 
-    // Ha pasado mas de un día
-    // Si es en el mismo dìa
+    // Ha pasado mas de un día (si es en el mismo día)
     interval = Math.floor(secondsAgo / (60 * 60 * 24));
     if (interval >= 1) {
       let res = new Date(time).toLocaleString('es-CL', {
