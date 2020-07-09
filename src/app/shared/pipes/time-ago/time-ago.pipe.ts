@@ -31,7 +31,7 @@ export class TimeAgoPipe implements PipeTransform {
       let values = res.split(' ');
       return `${values[0]} ${values[1].substring(0, 3)} ${values[2]} ${
         values[3]
-      }`;
+      }.`;
     }
 
     // Ha pasado mas de un día
@@ -54,7 +54,7 @@ export class TimeAgoPipe implements PipeTransform {
 
     // Ha pasado más de un minuto
     interval = Math.floor(secondsAgo / 60);
-    if (interval >= 1) return interval + ' minutos atrás';
+    if (interval >= 1) return `${interval} minutos atrás.`;
 
     return Math.floor(secondsAgo) + ' segundos atrás';
   }
