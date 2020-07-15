@@ -31,7 +31,7 @@ export class GmailService {
   ): Observable<any> {
     return this.http
       .get<MessagesList>(
-        `${API_URL}/${userId}/messages?maxResults=${limit}&labelIds=UNREAD&labelIds=INBOX&q=category:primary`,
+        `${API_URL}/${userId}/messages?maxResults=${limit}&labelIds=UNREAD&labelIds=INBOX`, // &q=category:primary
         {
           headers: new HttpHeaders({
             Authorization: `Bearer ${authtoken}`
@@ -140,11 +140,19 @@ export class GmailService {
 
   getNameAndEmail(value: string) {
     const temp_index = value.indexOf('<');
-    let name = value.substring(0, temp_index - 1);
-    name = name.replace(/\"/g, '');
 
-    let email = value.substring(temp_index + 1, value.length);
-    email = email.replace(/>/g, '');
+    let name, email;
+    if (temp_index >= 0) {
+      name = value.substring(0, temp_index - 1);
+      name = name.replace(/\"/g, '');
+      email = value.substring(temp_index + 1, value.length);
+      email = email.replace(/>/g, '');
+    } else {
+      let index = value.indexOf('@');
+      if (index >= 0) name = value.substring(0, index);
+      else name = 'Unknown';
+      email = value;
+    }
 
     return {
       name,
@@ -153,10 +161,11 @@ export class GmailService {
   }
 
   private getImageParams(name: string, index: number) {
-    name = name.replace(/\|/g, '');
+    name = name.replace(/[\|'\(\)]+/g, '');
     name = name.replace(/\s{2,}/g, ' ');
     const names = name.split(' ', 2);
     const length = names.length;
+    index = index % MAT_COLORS.length;
 
     let letters;
     if (length === 1) letters = names[0];
